@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use phpDocumentor\Reflection\Types\Self_;
 
 class User extends Authenticatable
 {
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar'
     ];
 
 
@@ -52,4 +54,17 @@ class User extends Authenticatable
 //    public function getNameAttribute($name) : string{
 //        return 'My name is ' . ucfirst($name);
 //    }
+
+    public static function uploadAvatar($image){
+        $filename = $image->getClientOriginalName();
+        (new self())->deleteOldImage();
+        $image->storeAs('pictures', $filename, 'public');
+        auth()->user()->update(['avatar' => $filename]);
+    }
+
+    protected function deleteOldImage(){
+        if ($this->avatar){
+            Storage::delete('/public/pictures/'. $this->avatar);
+        }
+    }
 }

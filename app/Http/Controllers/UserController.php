@@ -3,16 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
 class UserController extends Controller
 {
+    public function uploadAvatar (\Illuminate\Http\Request $request): string{
+        if ($request->hasFile('image')){
+            User::uploadAvatar($request->image);
+        }
+        return redirect()->back();
+    }
+
      public function index()
      {
-         $data = [
-             'name' => 'lili',
-             'email' => 'll@gmail.com',
-             'password' => 'pas'
-         ];
+//         $data = [
+//             'name' => 'lili',
+//             'email' => 'll@gmail.com',
+//             'password' => 'pas'
+//         ];
 
 //         User::create($data);
 //         $user = new User();
@@ -33,3 +43,4 @@ class UserController extends Controller
 //         return view('home');
      }
 }
+
